@@ -1,8 +1,8 @@
-import "dotenv/config";
 import app from "./app";
+import { env } from "./config/env";
 
-const PORT = Number(process.env.PORT) || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Commerce Core API is running on port ${PORT}`);
+app.listen(env.PORT, () => {
+  console.log(
+    `Commerce Core API is running on port ${env.PORT} in ${env.NODE_ENV} mode`,
+  );
 });
