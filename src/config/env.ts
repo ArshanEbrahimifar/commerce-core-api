@@ -9,6 +9,8 @@ const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
 
   MONGODB_URI: z.string().url(),
+
+  BCRYPT_SALT_ROUNDS: z.coerce.number().int().min(10).max(15).default(12),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
