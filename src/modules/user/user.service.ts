@@ -1,5 +1,5 @@
 import { AppError } from "../../utils/app-error";
-import { User } from "./user.model";
+import { IUser, User } from "./user.model";
 import { type RegisterUserInput } from "./user.schema";
 
 export const createUser = async (input: RegisterUserInput) => {
@@ -15,6 +15,6 @@ export const createUser = async (input: RegisterUserInput) => {
   return User.findById(user._id).orFail();
 };
 
-export const findUserByEmail = async (email: string) => {
+export const findUserByEmail = async (email: string): Promise<IUser | null> => {
   return User.findOne({ email }).select("+password");
 };
