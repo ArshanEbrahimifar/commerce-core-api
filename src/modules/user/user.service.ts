@@ -18,3 +18,7 @@ export const createUser = async (input: RegisterUserInput) => {
 export const findUserByEmail = async (email: string): Promise<IUser | null> => {
   return User.findOne({ email }).select("+password");
 };
+
+export const findUserById = async (userId: string) => {
+  return User.findById(userId);
+};

@@ -1,8 +1,12 @@
 import { Router } from "express";
 import { validateResource } from "../../middlewares/validate-resource.middleware";
-import { loginUserController, registerUserController } from "./user.controller";
+import {
+  loginUserController,
+  registerUserController,
+  getMeController,
+} from "./user.controller";
 import { loginUserSchema, registerUserSchema } from "./user.schema";
-
+import { requireAuth } from "../../middlewares/auth.middleware";
 const router = Router();
 
 router.post(
@@ -12,5 +16,7 @@ router.post(
 );
 
 router.post("/login", validateResource(loginUserSchema), loginUserController);
+
+router.get("/me", requireAuth, getMeController);
 
 export default router;

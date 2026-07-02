@@ -1,9 +1,10 @@
 import { type Request, type Response } from "express";
 import { asyncHandler } from "../../utils/async-handler";
 import { LoginUserInput, type RegisterUserInput } from "./user.schema";
-import { createUser, findUserByEmail } from "./user.service";
+import { createUser, findUserByEmail, findUserById } from "./user.service";
 import { AppError } from "../../utils/app-error";
 import { signAccessToken } from "../../utils/jwt";
+import { type AuthenticatedRequest } from "../../middlewares/auth.middleware";
 
 export const registerUserController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -46,6 +47,24 @@ export const loginUserController = asyncHandler(
           name: user.name,
           email: user.email,
         },
+      },
+    });
+  },
+);
+
+export const getMeController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { userId } = req as AuthenticatedRequest;
+    const user = await findUserById(userId);
+
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+    res.status(200).json({
+      success: true,
+      message: "User profile fetched successfully",
+      data: {
+        user,
       },
     });
   },
