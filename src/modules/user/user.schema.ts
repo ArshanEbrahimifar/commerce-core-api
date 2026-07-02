@@ -12,15 +12,10 @@ export const registerUserSchema = z.object({
       password: z.string().min(8, "Password must be at least 8 characters"),
       passwordConfirmation: z.string(),
     })
-    .refine(
-      (data) => {
-        data.password === data.passwordConfirmation;
-      },
-      {
-        message: "Password do not match",
-        path: ["passwordConfirmation"],
-      },
-    ),
+    .refine((data) => data.password === data.passwordConfirmation, {
+      message: "Password do not match",
+      path: ["passwordConfirmation"],
+    }),
 });
 
 export const loginUserSchema = z.object({
