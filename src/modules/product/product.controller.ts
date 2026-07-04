@@ -9,7 +9,7 @@ export const createProductController = asyncHandler(async (req, res) => {
 
   const product = await createProduct(input, userId);
 
-  res.status(209).json({
+  res.status(201).json({
     success: true,
     message: "Product created successfully",
     data: {
