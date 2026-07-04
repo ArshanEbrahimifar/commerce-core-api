@@ -15,3 +15,7 @@ export const createProduct = async (
   });
   return product;
 };
+
+export const findAllProducts = async () => {
+  return Product.find({}).sort({ createdAt: -1 });
+};
