@@ -1,7 +1,12 @@
 import { type AuthenticatedRequest } from "../../middlewares/auth.middleware";
+import { AppError } from "../../utils/app-error";
 import { asyncHandler } from "../../utils/async-handler";
-import { createProduct, findAllProducts } from "./product.service";
-import { type CreateProductInput } from "./product.shema";
+import {
+  createProduct,
+  findAllProducts,
+  findProductById,
+} from "./product.service";
+import { GetProductParams, type CreateProductInput } from "./product.shema";
 
 export const createProductController = asyncHandler(async (req, res) => {
   const input = req.body as CreateProductInput;
@@ -27,6 +32,22 @@ export const getProductsController = asyncHandler(async (_req, res) => {
     results: products.length,
     data: {
       products,
+    },
+  });
+});
+
+export const getProductController = asyncHandler(async (req, res) => {
+  const { productId } = req.params as GetProductParams;
+  const product = await findProductById(productId);
+
+  if (!product) {
+    throw new AppError("Product not found", 404);
+  }
+  res.status(200).json({
+    success: true,
+    message: "Product fetched successfully",
+    data: {
+      product,
     },
   });
 });

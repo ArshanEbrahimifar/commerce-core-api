@@ -28,3 +28,11 @@ export const createProductSchema = z.object({
 });
 
 export type CreateProductInput = z.infer<typeof createProductSchema>["body"];
+
+export const getProductSchema = z.object({
+  params: z.object({
+    productId: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid product id"),
+  }),
+});
+
+export type GetProductParams = z.infer<typeof getProductSchema>["params"];

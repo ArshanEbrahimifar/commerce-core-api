@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { validateResource } from "../../middlewares/validate-resource.middleware";
-import { createProductSchema } from "./product.shema";
+import { createProductSchema, getProductSchema } from "./product.shema";
 import {
   createProductController,
+  getProductController,
   getProductsController,
 } from "./product.controller";
 import { requireAuth } from "../../middlewares/auth.middleware";
@@ -16,4 +17,11 @@ router.post(
   createProductController,
 );
 router.get("/", getProductsController);
+
+router.get(
+  "/:productId",
+  validateResource(getProductSchema),
+  getProductController,
+);
+
 export default router;

@@ -19,3 +19,7 @@ export const createProduct = async (
 export const findAllProducts = async () => {
   return Product.find({}).sort({ createdAt: -1 });
 };
+
+export const findProductById = async (productId: string) => {
+  return Product.findById(productId);
+};
