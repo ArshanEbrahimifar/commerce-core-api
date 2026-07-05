@@ -5,8 +5,13 @@ import {
   createProduct,
   findAllProducts,
   findProductById,
+  updateProduct,
 } from "./product.service";
-import { GetProductParams, type CreateProductInput } from "./product.shema";
+import {
+  GetProductParams,
+  UpdateProductInput,
+  type CreateProductInput,
+} from "./product.shema";
 
 export const createProductController = asyncHandler(async (req, res) => {
   const input = req.body as CreateProductInput;
@@ -46,6 +51,21 @@ export const getProductController = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Product fetched successfully",
+    data: {
+      product,
+    },
+  });
+});
+
+export const updateProductController = asyncHandler(async (req, res) => {
+  const input = req.body as UpdateProductInput;
+  const { userId } = req as AuthenticatedRequest;
+  const { productId } = req.params as GetProductParams;
+  const product = await updateProduct(productId, input, userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Product updated successfully",
     data: {
       product,
     },
