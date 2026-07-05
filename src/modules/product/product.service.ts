@@ -1,5 +1,6 @@
+import { AppError } from "../../utils/app-error";
 import { Product } from "./product.model";
-import { type CreateProductInput } from "./product.shema";
+import { UpdateProductInput, type CreateProductInput } from "./product.shema";
 
 export const createProduct = async (
   input: CreateProductInput,
@@ -22,4 +23,22 @@ export const findAllProducts = async () => {
 
 export const findProductById = async (productId: string) => {
   return Product.findById(productId);
+};
+
+export const updateProduct = async (
+  productId: string,
+  input: UpdateProductInput,
+  userId: string,
+) => {
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new AppError("The product does not exist", 404);
+  }
+  if (product.createdBy.toString() !== userId) {
+    throw new AppError("You are not allowed to update this product", 403);
+  }
+  Object.assign(product, input);
+
+  await product.save();
+  return product;
 };
