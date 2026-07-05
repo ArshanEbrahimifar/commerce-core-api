@@ -42,3 +42,17 @@ export const updateProduct = async (
   await product.save();
   return product;
 };
+
+export const deleteProduct = async (productId: string, userId: string) => {
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new AppError("the product not found", 404);
+  }
+  if (product.createdBy.toString() !== userId) {
+    throw new AppError("you are not allowed to delete this product", 403);
+  }
+
+  await product.deleteOne();
+
+  return product;
+};
