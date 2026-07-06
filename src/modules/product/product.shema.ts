@@ -76,3 +76,35 @@ export const updateProductSchema = z.object({
 });
 
 export type UpdateProductInput = z.infer<typeof updateProductSchema>["body"];
+
+export const getProductsSchema = z.object({
+  query: z.object({
+    search: z.string().trim().optional(),
+    category: z
+      .string()
+      .trim()
+      .transform((value) => value.toLowerCase())
+      .optional(),
+    minPrice: z.coerce
+      .number()
+      .min(0, "Minimum price can not be negative")
+      .optional(),
+    maxPrice: z.coerce
+      .number()
+      .min(0, "Maximum price can not be negative")
+      .optional(),
+    page: z.coerce
+      .number()
+      .int("Page must be an integer")
+      .min(1, "Page must be at least 1")
+      .default(1),
+    limit: z.coerce
+      .number()
+      .int("Limit must be an integer")
+      .min(1, "Limit must be at least 1")
+      .max(50, "Limit can not be more than 50")
+      .default(10),
+  }),
+});
+
+export type GetProductsQuery = z.infer<typeof getProductsSchema>["query"];
