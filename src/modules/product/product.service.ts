@@ -1,6 +1,10 @@
 import { AppError } from "../../utils/app-error";
 import { Product } from "./product.model";
-import { UpdateProductInput, type CreateProductInput } from "./product.shema";
+import {
+  GetProductsQuery,
+  UpdateProductInput,
+  type CreateProductInput,
+} from "./product.shema";
 
 export const createProduct = async (
   input: CreateProductInput,
@@ -17,8 +21,51 @@ export const createProduct = async (
   return product;
 };
 
-export const findAllProducts = async () => {
-  return Product.find({}).sort({ createdAt: -1 });
+export const findAllProducts = async (query: GetProductsQuery) => {
+  const { search, category, minPrice, maxPrice, page, limit } = query;
+  const filter: Record<string, any> = {};
+
+  if (search) {
+    filter.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  if (category) {
+    filter.category = category;
+  }
+
+  if (minPrice !== undefined || maxPrice !== undefined) {
+    const priceFilter: { $gte?: number; $lte?: number } = {};
+
+    if (minPrice !== undefined) {
+      priceFilter.$gte = minPrice;
+    }
+
+    if (maxPrice !== undefined) {
+      priceFilter.$lte = maxPrice;
+    }
+
+    filter.price = priceFilter;
+  }
+
+  const skip = (page - 1) * limit;
+
+  const [products, totalProducts] = await Promise.all([
+    Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+    Product.countDocuments(filter),
+  ]);
+
+  return {
+    products,
+    pagination: {
+      page,
+      limit,
+      totalProducts,
+      totalPages: Math.ceil(totalProducts / limit),
+    },
+  };
 };
 
 export const findProductById = async (productId: string) => {

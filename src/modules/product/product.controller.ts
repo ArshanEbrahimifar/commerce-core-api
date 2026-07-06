@@ -10,6 +10,7 @@ import {
 } from "./product.service";
 import {
   GetProductParams,
+  GetProductsQuery,
   UpdateProductInput,
   type CreateProductInput,
 } from "./product.shema";
@@ -29,13 +30,15 @@ export const createProductController = asyncHandler(async (req, res) => {
   });
 });
 
-export const getProductsController = asyncHandler(async (_req, res) => {
-  const products = await findAllProducts();
+export const getProductsController = asyncHandler(async (req, res) => {
+  const query = req.query as unknown as GetProductsQuery;
 
+  const { products, pagination } = await findAllProducts(query);
   res.status(200).json({
     success: true,
     message: "Products fetched successfully",
     results: products.length,
+    pagination,
     data: {
       products,
     },

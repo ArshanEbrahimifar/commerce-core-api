@@ -3,6 +3,7 @@ import { validateResource } from "../../middlewares/validate-resource.middleware
 import {
   createProductSchema,
   getProductSchema,
+  getProductsSchema,
   updateProductSchema,
 } from "./product.shema";
 import {
@@ -16,7 +17,7 @@ import { requireAuth } from "../../middlewares/auth.middleware";
 
 const router = Router();
 
-router.get("/", getProductsController);
+router.get("/", validateResource(getProductsSchema), getProductsController);
 
 router.get(
   "/:productId",
