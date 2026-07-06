@@ -19,6 +19,8 @@ export const validateResource =
       });
     }
 
-    req.body = result.data.body;
+    req.body = result.data.body ?? req.body;
+    (req as any).query = result.data.query ?? req.query;
+    (req as any).params = result.data.params ?? req.params;
     return next();
   };
