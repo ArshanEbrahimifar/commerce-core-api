@@ -7,6 +7,7 @@ import {
 } from "./product.shema";
 import {
   createProductController,
+  deleteProductController,
   getProductController,
   getProductsController,
   updateProductController,
@@ -35,6 +36,13 @@ router.patch(
   requireAuth,
   validateResource(updateProductSchema),
   updateProductController,
+);
+
+router.delete(
+  "/:productId",
+  requireAuth,
+  validateResource(getProductSchema),
+  deleteProductController,
 );
 
 export default router;
