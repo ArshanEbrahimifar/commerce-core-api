@@ -35,3 +35,13 @@ export const addItemToCart = async (
   await cart.save();
   return cart;
 };
+export const getCartByUserId = async (userId: string) => {
+  const cart = await Cart.findOne({ user: userId }).populate("items.product");
+  if (!cart) {
+    return {
+      user: userId,
+      items: [],
+    };
+  }
+  return cart;
+};
