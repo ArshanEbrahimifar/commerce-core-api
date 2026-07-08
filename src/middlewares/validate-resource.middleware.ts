@@ -19,8 +19,21 @@ export const validateResource =
       });
     }
 
-    req.body = result.data.body ?? req.body;
-    (req as any).query = result.data.query ?? req.query;
-    (req as any).params = result.data.params ?? req.params;
+    if (result.data.body !== undefined) {
+      req.body = result.data.body;
+    }
+
+    if (result.data.query !== undefined) {
+      Object.defineProperty(req, "query", {
+        value: result.data.query,
+        writable: true,
+        configurable: true,
+      });
+    }
+
+    if (result.data.params !== undefined && result.data.params !== null) {
+      (req as any).params = result.data.params;
+    }
+
     return next();
   };
