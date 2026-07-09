@@ -29,3 +29,13 @@ export const updateCartItemSchema = z.object({
 
 export type UpdateCartItemInput = z.infer<typeof updateCartItemSchema>["body"];
 export type CartItemParams = z.infer<typeof updateCartItemSchema>["params"];
+
+export const removeCartItemSchema = z.object({
+  params: z.object({
+    productId: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid product id"),
+  }),
+});
+
+export type RemoveCartItemParams = z.infer<
+  typeof removeCartItemSchema
+>["params"];

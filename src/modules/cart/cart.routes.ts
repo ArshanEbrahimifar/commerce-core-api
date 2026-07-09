@@ -1,10 +1,15 @@
 import { Router } from "express";
 import { requireAuth } from "../../middlewares/auth.middleware";
 import { validateResource } from "../../middlewares/validate-resource.middleware";
-import { addCartItemSchema, updateCartItemSchema } from "./cart.schema";
+import {
+  addCartItemSchema,
+  removeCartItemSchema,
+  updateCartItemSchema,
+} from "./cart.schema";
 import {
   addCartItemController,
   getCartController,
+  removeCartItemController,
   updateCartItemController,
 } from "./cart.controller";
 
@@ -24,6 +29,13 @@ router.patch(
   requireAuth,
   validateResource(updateCartItemSchema),
   updateCartItemController,
+);
+
+router.delete(
+  "/items/:productId",
+  requireAuth,
+  validateResource(removeCartItemSchema),
+  removeCartItemController,
 );
 
 export default router;

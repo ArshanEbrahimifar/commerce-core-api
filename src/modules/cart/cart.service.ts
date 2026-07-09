@@ -65,3 +65,24 @@ export const updateCartItemQuantity = async (
   await cart.save();
   return cart;
 };
+export const removeCartItem = async (userId: string, productId: string) => {
+  const cart = await Cart.findOne({ user: userId });
+
+  if (!cart) {
+    throw new AppError("User does not have a available cart", 404);
+  }
+
+  const itemIndex = cart.items.findIndex(
+    (value) => value.product.toString() === productId,
+  );
+
+  if (itemIndex === -1) {
+    throw new AppError("Item not found in cart", 404);
+  }
+
+  cart.items.splice(itemIndex, 1);
+
+  await cart.save();
+
+  return cart;
+};

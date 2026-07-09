@@ -3,11 +3,13 @@ import { asyncHandler } from "../../utils/async-handler";
 import {
   AddCartItemInput,
   CartItemParams,
+  RemoveCartItemParams,
   UpdateCartItemInput,
 } from "./cart.schema";
 import {
   addItemToCart,
   getCartByUserId,
+  removeCartItem,
   updateCartItemQuantity,
 } from "./cart.service";
 
@@ -48,6 +50,20 @@ export const updateCartItemController = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Cart item updated successfully",
+    data: {
+      cart,
+    },
+  });
+});
+export const removeCartItemController = asyncHandler(async (req, res) => {
+  const { userId } = req as AuthenticatedRequest;
+  const { productId } = req.params as RemoveCartItemParams;
+
+  const cart = await removeCartItem(userId, productId);
+
+  res.status(200).json({
+    success: true,
+    message: "Cart item removed successfully",
     data: {
       cart,
     },
