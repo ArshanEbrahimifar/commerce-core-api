@@ -8,6 +8,7 @@ import {
 } from "./cart.schema";
 import {
   addItemToCart,
+  clearCart,
   getCartByUserId,
   removeCartItem,
   updateCartItemQuantity,
@@ -64,6 +65,20 @@ export const removeCartItemController = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Cart item removed successfully",
+    data: {
+      cart,
+    },
+  });
+});
+
+export const clearCartController = asyncHandler(async (req, res) => {
+  const { userId } = req as AuthenticatedRequest;
+
+  const cart = await clearCart(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Cart cleared successfully",
     data: {
       cart,
     },

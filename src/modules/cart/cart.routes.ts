@@ -8,6 +8,7 @@ import {
 } from "./cart.schema";
 import {
   addCartItemController,
+  clearCartController,
   getCartController,
   removeCartItemController,
   updateCartItemController,
@@ -16,6 +17,8 @@ import {
 const router = Router();
 
 router.get("/", requireAuth, getCartController);
+
+router.delete("/", requireAuth, clearCartController);
 
 router.post(
   "/items",

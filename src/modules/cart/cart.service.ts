@@ -86,3 +86,17 @@ export const removeCartItem = async (userId: string, productId: string) => {
 
   return cart;
 };
+export const clearCart = async (userId: string) => {
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart) {
+    return {
+      user: userId,
+      items: [],
+    };
+  }
+  cart.items = [];
+
+  await cart.save();
+
+  return cart;
+};
