@@ -1,5 +1,6 @@
 import { AppError } from "../../utils/app-error";
 import { Cart } from "../cart/cart.model";
+import { Product } from "../product/product.model";
 import { Order } from "./order.model";
 
 export const createOrderFromCart = async (userId: string) => {
@@ -82,7 +83,17 @@ export const cancelOrder = async (userId: string, orderId: string) => {
   if (order.status !== "pending") {
     throw new AppError("Only pending orders can be cancelled", 400);
   }
+
+  for (const item of order.items) {
+    await Product.findByIdAndUpdate(item.product, {
+      $inc: {
+        stock: item.quantity,
+      },
+    });
+  }
+
   order.status = "cancelled";
+
   await order.save();
 
   return order;
