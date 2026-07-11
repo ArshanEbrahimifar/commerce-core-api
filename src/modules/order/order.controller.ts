@@ -2,6 +2,7 @@ import { AuthenticatedRequest } from "../../middlewares/auth.middleware";
 import { asyncHandler } from "../../utils/async-handler";
 import { GetOrdersParams } from "./order.schema";
 import {
+  cancelOrder,
   createOrderFromCart,
   getOrderById,
   getOrderByUserId,
@@ -45,6 +46,21 @@ export const getOrderController = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Order fetched successfully",
+    data: {
+      order,
+    },
+  });
+});
+
+export const cancelOrderController = asyncHandler(async (req, res) => {
+  const { userId } = req as AuthenticatedRequest;
+  const { orderId } = req.params as GetOrdersParams;
+
+  const order = await cancelOrder(userId, orderId);
+
+  res.status(200).json({
+    success: true,
+    message: "Order cancelled successfully",
     data: {
       order,
     },

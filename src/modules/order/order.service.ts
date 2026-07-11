@@ -56,3 +56,22 @@ export const getOrderById = async (userId: string, orderId: string) => {
   }
   return order;
 };
+
+export const cancelOrder = async (userId: string, orderId: string) => {
+  const order = await Order.findOne({
+    _id: orderId,
+    user: userId,
+  });
+
+  if (!order) {
+    throw new AppError("Order not found", 404);
+  }
+
+  if (order.status !== "pending") {
+    throw new AppError("Only pending orders can be cancelled", 400);
+  }
+  order.status = "cancelled";
+  await order.save();
+
+  return order;
+};

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { requireAuth } from "../../middlewares/auth.middleware";
 import {
+  cancelOrderController,
   createOrderController,
   getMyOrderController,
   getOrderController,
@@ -20,5 +21,12 @@ router.get(
 );
 
 router.post("/", requireAuth, createOrderController);
+
+router.patch(
+  "/:orderId/cancel",
+  requireAuth,
+  validateResource(getOrderSchema),
+  cancelOrderController,
+);
 
 export default router;
