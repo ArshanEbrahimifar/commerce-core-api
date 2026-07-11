@@ -44,3 +44,15 @@ export const createOrderFromCart = async (userId: string) => {
 export const getOrderByUserId = async (userId: string) => {
   return Order.find({ user: userId }).sort({ createdAt: -1 });
 };
+
+export const getOrderById = async (userId: string, orderId: string) => {
+  const order = await Order.findOne({
+    _id: orderId,
+    user: userId,
+  });
+
+  if (!order) {
+    throw new AppError("Order not found", 404);
+  }
+  return order;
+};
