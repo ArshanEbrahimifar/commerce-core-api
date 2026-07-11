@@ -40,3 +40,7 @@ export const createOrderFromCart = async (userId: string) => {
 
   return order;
 };
+
+export const getOrderByUserId = async (userId: string) => {
+  return Order.find({ user: userId }).sort({ createdAt: -1 });
+};

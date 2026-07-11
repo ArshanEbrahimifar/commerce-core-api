@@ -1,9 +1,14 @@
 import { Router } from "express";
 import { requireAuth } from "../../middlewares/auth.middleware";
-import { createOrderController } from "./order.controller";
+import {
+  createOrderController,
+  getMyOrderController,
+} from "./order.controller";
 
 const router = Router();
 
-router.get("/", requireAuth, createOrderController);
+router.get("/", requireAuth, getMyOrderController);
+
+router.post("/", requireAuth, createOrderController);
 
 export default router;
