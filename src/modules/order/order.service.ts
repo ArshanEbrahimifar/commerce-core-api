@@ -15,6 +15,10 @@ export const createOrderFromCart = async (userId: string) => {
       throw new AppError("Product not found", 404);
     }
 
+    if (product.stock < item.quantity) {
+      throw new AppError(`Not enough stock for ${product.name}`, 400);
+    }
+
     return {
       product: product._id,
       name: product.name,
@@ -33,6 +37,14 @@ export const createOrderFromCart = async (userId: string) => {
     totalAmount,
     status: "pending",
   });
+
+  for (const item of cart.items) {
+    const product = item.product as any;
+
+    product.stock -= item.quantity;
+
+    await product.save();
+  }
 
   cart.items = [];
 
